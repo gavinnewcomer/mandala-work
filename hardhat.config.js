@@ -20,9 +20,8 @@ module.exports = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
-      blockGasLimit: 1000000000000000,
-      gasPrice: 0.01,
-      timeout: 1000000000000000
+      blockGasLimit: 9007199254740991,
+      timeout: 100000
     }
   }
 }

@@ -32,44 +32,90 @@ library OnChainSVGGenerator {
             );
     }
 
+    function mirrorOverYAxis(uint16 xPoint) private pure returns (uint16) {
+        if (150 > xPoint) {
+            return 150 - xPoint;
+        }
+        return xPoint - 150;
+    }
+
     function buildMandala(cordInput[] memory cordsToPlot, colorInput[] memory colorsToPlot) private pure returns (string memory) {
-        require (cordsToPlot.length == colorsToPlot.length);
         bytes memory circles;
+        string[7] memory colorPallet = ['ffc2df', 'dfbef8', 'ffe780', '99e2ff', '000000', '97e8ec', '111111'];
         for (uint i=0; i<cordsToPlot.length; i++) {
+            cordInput memory reflectedCords = cordInput(cordsToPlot[i].cy,cordsToPlot[i].cx);
             circles = string.concat(
                 circles,
                 abi.encodePacked(
                     circleSVG( // Q1
                         cordsToPlot[i].cx,
                         cordsToPlot[i].cy,
-                        colorsToPlot[i].fillColor, 
-                        colorsToPlot[i].borderColor, 
-                        '5', 
-                        '7'
+                        colorPallet[colorsToPlot[i].fillColor], 
+                        colorPallet[colorsToPlot[i].borderColor],
+                        '2', 
+                        '3'
                     ),
                     circleSVG( // Q2
-                        150 - cordsToPlot[i].xToEast,
+                        150 - mirrorOverYAxis(cordsToPlot[i].cx),
                         cordsToPlot[i].cy,
-                        colorsToPlot[i].fillColor, 
-                        colorsToPlot[i].borderColor, 
-                        '5', 
-                        '7'
+                        colorPallet[colorsToPlot[i].fillColor], 
+                        colorPallet[colorsToPlot[i].borderColor],
+                        '2', 
+                        '3'
                     ),
                     circleSVG( // Q3
-                        150 - cordsToPlot[i].xToEast,
+                        150 - mirrorOverYAxis(cordsToPlot[i].cx),
                         300 - cordsToPlot[i].cy,
-                        colorsToPlot[i].fillColor, 
-                        colorsToPlot[i].borderColor,  
-                        '5', 
-                        '7'
+                        colorPallet[colorsToPlot[i].fillColor], 
+                        colorPallet[colorsToPlot[i].borderColor],
+                        '2', 
+                        '3'
                     ),
                     circleSVG( // Q4
                         cordsToPlot[i].cx,
                         300 - cordsToPlot[i].cy,
-                        colorsToPlot[i].fillColor, 
-                        colorsToPlot[i].borderColor,
-                        '5', 
-                        '7'
+                        colorPallet[colorsToPlot[i].fillColor], 
+                        colorPallet[colorsToPlot[i].borderColor],
+                        '2', 
+                        '3'
+                    )
+                )
+            );
+            circles = string.concat(
+                circles,
+                abi.encodePacked(
+                    // Refelction Qs
+                    circleSVG( // Q1
+                        reflectedCords.cx,
+                        reflectedCords.cy,
+                        colorPallet[colorsToPlot[i].fillColor], 
+                        colorPallet[colorsToPlot[i].borderColor],
+                        '2', 
+                        '3'
+                    ),
+                    circleSVG( // Q2
+                        150 - mirrorOverYAxis(reflectedCords.cx),
+                        reflectedCords.cy,
+                        colorPallet[colorsToPlot[i].fillColor], 
+                        colorPallet[colorsToPlot[i].borderColor],
+                        '2', 
+                        '3'
+                    ),
+                    circleSVG( // Q3
+                        150 - mirrorOverYAxis(reflectedCords.cx),
+                        300 - reflectedCords.cy,
+                        colorPallet[colorsToPlot[i].fillColor], 
+                        colorPallet[colorsToPlot[i].borderColor],
+                        '2', 
+                        '3'
+                    ),
+                    circleSVG( // Q4
+                        reflectedCords.cx,
+                        300 - reflectedCords.cy,
+                        colorPallet[colorsToPlot[i].fillColor], 
+                        colorPallet[colorsToPlot[i].borderColor],
+                        '2', 
+                        '3'
                     )
                 )
             );

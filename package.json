@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "main": "index.js",
   "scripts": {
-    "dev": "hardhat node --network hardhat"
+    "localhost": "hardhat node --network localhost",
+    "hardhat": "hardhat node --network hardhat"
   },
   "author": "",
   "license": "ISC",
@@ -22,7 +23,7 @@
     "hardhat": "^2.6.8",
     "hardhat-contract-sizer": "^2.1.1",
     "hardhat-gas-reporter": "^1.0.4",
-    "solidity-coverage": "^0.7.17"
+    "solidity-coverage": "^0.8.2"
   },
   "dependencies": {
     "@prb/math": "^2.5.0",

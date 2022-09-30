@@ -13,15 +13,15 @@ contract MandalaToken {
     cordInput[] internal savedCords;
     colorInput[] internal savedColors;
 
-    function saveMandalaBluePrint(cordInput[] memory cordsToPlot, colorInput[] memory colorsToPlot) public {
+    function saveMandalaBluePrint(cordInput[] memory cordsToPlot, colorInput[] memory colorsToSave) public {
         for (uint i=0; i<cordsToPlot.length; i++) {
             savedCords.push(cordsToPlot[i]);
-            savedColors.push(colorsToPlot[i]);
+            savedColors.push(colorsToSave[i]);
         }
     }
 
-    function constructTokenURI() public view returns (string memory) {
 
+    function constructTokenURI() public view returns (string memory) {
         return string(
             abi.encodePacked(
                 'data:application/json;base64,',
