@@ -12,8 +12,9 @@ npx hardhat node
 npx hardhat run scripts/mint-mandala.js
 ```
 
-
+```
 GAS OPTIMIZATION WORKING
 two struct of 2 uint8 w 55 sed coords =>     2618556 gas units
 one struct of 4 uint8s w 55 saved coords =>  1357805 gas units
 one array of uint256 w 64 saved coords =>     201100 gas units
+```
