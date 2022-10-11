@@ -48,38 +48,36 @@ library OnChainSVGGenerator {
         for (uint j=0; j<cordsToPlot.length; j++) {
             for (uint i=8; i<241; i+=8) {
                 (uint256 cx, uint256 cy) = decodeSavedCordsToStruct(cordsToPlot[j], i, i+8);
-                cordInputOptimized memory reflectedCords = cordInputOptimized(cy, cx);
-                cordInputOptimized memory cords = cordInputOptimized(cx, cy);
                 circles = string.concat(
                     circles,
                     abi.encodePacked(
                         circleSVG( // Q1
-                            cords.cx,
-                            cords.cy,
+                            cx,
+                            cy,
                             'ffc2df',
                             '99e2ff',
                             '1', 
                             '2'
                         ),
                         circleSVG( // Q2
-                            127 - mirrorOverYAxis(cords.cx),
-                            cords.cy,
+                            127 - mirrorOverYAxis(cx),
+                            cy,
                             'ffc2df', 
                             '99e2ff',
                             '1', 
                             '2'
                         ),
                         circleSVG( // Q3
-                            127 - mirrorOverYAxis(cords.cx),
-                            255 - cords.cy,
+                            127 - mirrorOverYAxis(cx),
+                            255 - cy,
                             'ffc2df', 
                             '99e2ff',
                             '1', 
                             '2'
                         ),
                         circleSVG( // Q4
-                            cords.cx,
-                            255 - cords.cy,
+                            cx,
+                            255 - cy,
                             'ffc2df', 
                             '99e2ff',
                             '1', 
@@ -92,32 +90,32 @@ library OnChainSVGGenerator {
                     circles,
                     abi.encodePacked(
                         circleSVG( // Q1
-                            reflectedCords.cx,
-                            reflectedCords.cy,
+                            cy,
+                            cx,
                             'ffc2df', 
                             '99e2ff',
                             '1', 
                             '2'
                         ),
                         circleSVG( // Q2
-                            127 - mirrorOverYAxis(reflectedCords.cx),
-                            reflectedCords.cy,
+                            127 - mirrorOverYAxis(cy),
+                            cx,
                             'ffc2df', 
                             '99e2ff',
                             '1', 
                             '2'
                         ),
                         circleSVG( // Q3
-                            127 - mirrorOverYAxis(reflectedCords.cx),
-                            255 - reflectedCords.cy,
+                            127 - mirrorOverYAxis(cy),
+                            255 - cx,
                             'ffc2df', 
                             '99e2ff',
                             '1', 
                             '2'
                         ),
                         circleSVG( // Q4
-                            reflectedCords.cx,
-                            255 - reflectedCords.cy,
+                            cy,
+                            255 - cx,
                             'ffc2df', 
                             '99e2ff',
                             '1', 
