@@ -1,16 +1,6 @@
-# Sample Hardhat Project
+# On-Chain SVG Mandala Generation
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
-
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/mint-mandala.js
-```
+This project is a demonstration of large scale svg generation all on chain, stored in an optimized manner.
 
 ```
 GAS OPTIMIZATION WORKING
