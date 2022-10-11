@@ -87,7 +87,7 @@ library OnChainSVGGenerator {
                         )
                     )
                 );
-                // Refelction Quadrants
+                // Reflection Quadrants
                 circles = string.concat(
                     circles,
                     abi.encodePacked(
