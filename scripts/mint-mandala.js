@@ -45,7 +45,7 @@ async function main() {
     
     let saveBPTxn = await myNftContract.saveMandalaBluePrint(cordsArray);
     console.log(saveBPTxn);
-    //let tokenURI = await myNftContract.constructTokenURI();
+    let tokenURI = await myNftContract.constructTokenURI();
     /*
     let tokenURI = await myNftContract.constructTokenURI();
     const string = tokenURI.split(',');
