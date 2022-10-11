@@ -15,7 +15,7 @@ module.exports = {
                enabled: true,
                runs: 1500
            },
-       },
+       }
   },
   defaultNetwork: "hardhat",
   networks: {

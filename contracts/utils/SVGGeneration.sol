@@ -4,17 +4,20 @@ pragma solidity 0.8.9;
 
 import "../libraries/Strings.sol";
 import "../structs/Mandala.sol";
+import "@nomiclabs/buidler/console.sol";
 
 library OnChainSVGGenerator {
 
-    function generateSVG(cordInput[] memory cordsToPlot, colorInput[] memory colorsToPlot) internal pure returns (string memory svg) {
-        //  calc the main raidus start point by taking 20% of the height width and incrementing up 10% until you get to 70% of the heightWidth var
+    function decodeSavedCordsToStruct(uint256 savedCord, uint256 xBitSlice, uint256 yBitSlice) internal pure returns (uint256, uint256) {
+        return (uint256(uint8(savedCord>>xBitSlice)), uint256(uint8(savedCord>>yBitSlice)));
+    }
 
+    function generateSVG(uint256[] memory savedCords) internal view returns (string memory svg) {
         return
             string(
                 abi.encodePacked(
                     generateSVGDefs('1000'),
-                    buildMandala(cordsToPlot, colorsToPlot),
+                    buildMandala(savedCords),
                     '</svg>'
                 )
             );
@@ -32,101 +35,104 @@ library OnChainSVGGenerator {
             );
     }
 
-    function mirrorOverYAxis(uint16 xPoint) private pure returns (uint16) {
-        if (150 > xPoint) {
-            return 150 - xPoint;
+    function mirrorOverYAxis(uint256 xPoint) private pure returns (uint256) {
+        if (127 > xPoint) {
+            return 127 - xPoint;
         }
-        return xPoint - 150;
+        return xPoint - 127;
     }
 
-    function buildMandala(cordInput[] memory cordsToPlot, colorInput[] memory colorsToPlot) private pure returns (string memory) {
+    function buildMandala(uint256[] memory cordsToPlot) private view returns (string memory) {
         bytes memory circles;
         string[7] memory colorPallet = ['ffc2df', 'dfbef8', 'ffe780', '99e2ff', '000000', '97e8ec', '111111'];
-        for (uint i=0; i<cordsToPlot.length; i++) {
-            cordInput memory reflectedCords = cordInput(cordsToPlot[i].cy,cordsToPlot[i].cx);
-            circles = string.concat(
-                circles,
-                abi.encodePacked(
-                    circleSVG( // Q1
-                        cordsToPlot[i].cx,
-                        cordsToPlot[i].cy,
-                        colorPallet[colorsToPlot[i].fillColor], 
-                        colorPallet[colorsToPlot[i].borderColor],
-                        '2', 
-                        '3'
-                    ),
-                    circleSVG( // Q2
-                        150 - mirrorOverYAxis(cordsToPlot[i].cx),
-                        cordsToPlot[i].cy,
-                        colorPallet[colorsToPlot[i].fillColor], 
-                        colorPallet[colorsToPlot[i].borderColor],
-                        '2', 
-                        '3'
-                    ),
-                    circleSVG( // Q3
-                        150 - mirrorOverYAxis(cordsToPlot[i].cx),
-                        300 - cordsToPlot[i].cy,
-                        colorPallet[colorsToPlot[i].fillColor], 
-                        colorPallet[colorsToPlot[i].borderColor],
-                        '2', 
-                        '3'
-                    ),
-                    circleSVG( // Q4
-                        cordsToPlot[i].cx,
-                        300 - cordsToPlot[i].cy,
-                        colorPallet[colorsToPlot[i].fillColor], 
-                        colorPallet[colorsToPlot[i].borderColor],
-                        '2', 
-                        '3'
+        for (uint j=0; j<cordsToPlot.length; j++) {
+            for (uint i=8; i<241; i+=8) {
+                (uint256 cx, uint256 cy) = decodeSavedCordsToStruct(cordsToPlot[j], i, i+8);
+                cordInputOptimized memory reflectedCords = cordInputOptimized(cy, cx);
+                cordInputOptimized memory cords = cordInputOptimized(cx, cy);
+                circles = string.concat(
+                    circles,
+                    abi.encodePacked(
+                        circleSVG( // Q1
+                            cords.cx,
+                            cords.cy,
+                            'ffc2df',
+                            '99e2ff',
+                            '1', 
+                            '2'
+                        ),
+                        circleSVG( // Q2
+                            127 - mirrorOverYAxis(cords.cx),
+                            cords.cy,
+                            'ffc2df', 
+                            '99e2ff',
+                            '1', 
+                            '2'
+                        ),
+                        circleSVG( // Q3
+                            127 - mirrorOverYAxis(cords.cx),
+                            255 - cords.cy,
+                            'ffc2df', 
+                            '99e2ff',
+                            '1', 
+                            '2'
+                        ),
+                        circleSVG( // Q4
+                            cords.cx,
+                            255 - cords.cy,
+                            'ffc2df', 
+                            '99e2ff',
+                            '1', 
+                            '2'
+                        )
                     )
-                )
-            );
-            circles = string.concat(
-                circles,
-                abi.encodePacked(
-                    // Refelction Qs
-                    circleSVG( // Q1
-                        reflectedCords.cx,
-                        reflectedCords.cy,
-                        colorPallet[colorsToPlot[i].fillColor], 
-                        colorPallet[colorsToPlot[i].borderColor],
-                        '2', 
-                        '3'
-                    ),
-                    circleSVG( // Q2
-                        150 - mirrorOverYAxis(reflectedCords.cx),
-                        reflectedCords.cy,
-                        colorPallet[colorsToPlot[i].fillColor], 
-                        colorPallet[colorsToPlot[i].borderColor],
-                        '2', 
-                        '3'
-                    ),
-                    circleSVG( // Q3
-                        150 - mirrorOverYAxis(reflectedCords.cx),
-                        300 - reflectedCords.cy,
-                        colorPallet[colorsToPlot[i].fillColor], 
-                        colorPallet[colorsToPlot[i].borderColor],
-                        '2', 
-                        '3'
-                    ),
-                    circleSVG( // Q4
-                        reflectedCords.cx,
-                        300 - reflectedCords.cy,
-                        colorPallet[colorsToPlot[i].fillColor], 
-                        colorPallet[colorsToPlot[i].borderColor],
-                        '2', 
-                        '3'
+                );
+                // Refelction Quadrants
+                circles = string.concat(
+                    circles,
+                    abi.encodePacked(
+                        circleSVG( // Q1
+                            reflectedCords.cx,
+                            reflectedCords.cy,
+                            'ffc2df', 
+                            '99e2ff',
+                            '1', 
+                            '2'
+                        ),
+                        circleSVG( // Q2
+                            127 - mirrorOverYAxis(reflectedCords.cx),
+                            reflectedCords.cy,
+                            'ffc2df', 
+                            '99e2ff',
+                            '1', 
+                            '2'
+                        ),
+                        circleSVG( // Q3
+                            127 - mirrorOverYAxis(reflectedCords.cx),
+                            255 - reflectedCords.cy,
+                            'ffc2df', 
+                            '99e2ff',
+                            '1', 
+                            '2'
+                        ),
+                        circleSVG( // Q4
+                            reflectedCords.cx,
+                            255 - reflectedCords.cy,
+                            'ffc2df', 
+                            '99e2ff',
+                            '1', 
+                            '2'
+                        )
                     )
-                )
-            );
+                );
+            }
         }
-
         return string(circles);
     }
 
     function circleSVG(
-        uint16 cx,
-        uint16 cy,
+        uint256 cx,
+        uint256 cy,
         string memory fillColor,
         string memory strokeColor, 
         string memory strokeWidth, 

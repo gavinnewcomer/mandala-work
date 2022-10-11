@@ -11,3 +11,8 @@ REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.js
 ```
+
+
+GAS OPTIMIZATION WORKING
+two struct of 2 uint8 w 55 sed cords =>     2618556 gas units
+one struct of 4 uint8s w 55 saved coords => 1357805 gas units
